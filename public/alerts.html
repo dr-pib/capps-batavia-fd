@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Alerts — Capps-Batavia Fire Department</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header id="site-header"></header>
+<div id="alert-banner"></div>
+
+<div class="page-hero-sm">
+  <h1>🚨 Community Alerts</h1>
+</div>
+
+<div class="content-wrap narrow">
+  <p style="color:#6b7280;margin-bottom:24px;font-size:0.9rem;">
+    Active notices from the Capps-Batavia Fire Department. Check back for burn bans, road closures, and emergency information.
+  </p>
+
+  <div id="alerts-list">
+    <div class="no-alerts">
+      <div class="icon">⏳</div>
+      <p>Loading alerts…</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Capps-Batavia Fire Department &mdash; Boone County, Arkansas</p>
+  <p style="margin-top:6px"><a href="mailto:cbfd5003@gmail.com">cbfd5003@gmail.com</a></p>
+</footer>
+
+<script src="nav.js"></script>
+<script>
+const TYPE_LABELS = {
+  'burn-ban':     'Burn Ban',
+  'road-closure': 'Road Closure',
+  'emergency':    'Emergency',
+  'general':      'Notice',
+};
+
+function formatDate(ts) {
+  return new Date(ts).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+async function loadAlerts() {
+  const alerts = await fetch('/api/alerts').then(r => r.json());
+  const el = document.getElementById('alerts-list');
+
+  if (!alerts.length) {
+    el.innerHTML = `<div class="no-alerts"><div class="icon">✅</div><p>No active alerts at this time.</p></div>`;
+    return;
+  }
+
+  el.innerHTML = alerts.map(a => `
+    <div class="alert-card ${a.type}">
+      <div>
+        <span class="alert-type-badge badge-${a.type}">${TYPE_LABELS[a.type] ?? 'Notice'}</span>
+      </div>
+      <div class="alert-body">
+        <h3>${escHtml(a.title)}</h3>
+        <p>${escHtml(a.message)}</p>
+        <div class="alert-meta">Posted ${formatDate(a.postedAt)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+loadAlerts().catch(() => {
+  document.getElementById('alerts-list').innerHTML = `<div class="no-alerts"><div class="icon">⚠️</div><p>Could not load alerts. Please try again later.</p></div>`;
+});
+</script>
+</body>
+</html>

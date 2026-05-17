@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Capps-Batavia Fire Department</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background: #f3f4f6; }
+  </style>
+</head>
+<body>
+
+<header id="site-header"></header>
+<div id="alert-banner"></div>
+
+<div class="page-hero-sm">
+  <h1>🔐 Alert Management</h1>
+</div>
+
+<div class="admin-wrap">
+
+  <!-- Password gate -->
+  <div id="password-gate" class="admin-form">
+    <h2>Enter Admin Password</h2>
+    <div class="form-group">
+      <label for="password-input">Password</label>
+      <input type="password" id="password-input" placeholder="Admin password" autocomplete="current-password" />
+    </div>
+    <button class="btn btn-primary" id="login-btn">Log In</button>
+    <div id="login-error" style="color:#dc2626;font-size:0.85rem;margin-top:10px;display:none">Incorrect password.</div>
+  </div>
+
+  <!-- Admin panel (hidden until authenticated) -->
+  <div id="admin-panel" style="display:none">
+
+    <div class="admin-form">
+      <h2>Post a New Alert</h2>
+
+      <div class="form-group">
+        <label for="alert-type">Alert Type</label>
+        <select id="alert-type">
+          <option value="burn-ban">🔥 Burn Ban</option>
+          <option value="road-closure">🚧 Road Closure</option>
+          <option value="emergency">🚨 Emergency</option>
+          <option value="general">📢 General Notice</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="alert-title">Title</label>
+        <input type="text" id="alert-title" placeholder="e.g. Burn Ban in Effect" />
+      </div>
+
+      <div class="form-group">
+        <label for="alert-message">Message</label>
+        <textarea id="alert-message" placeholder="Provide details about this alert…"></textarea>
+      </div>
+
+      <button class="btn btn-primary" id="post-btn">Post Alert</button>
+      <div id="post-status"></div>
+    </div>
+
+    <div class="admin-alerts">
+      <h2>Active Alerts</h2>
+      <div id="admin-alerts-list">
+        <p style="color:#9ca3af;font-size:0.9rem">Loading…</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px">
+      <button class="btn btn-outline btn-sm" id="logout-btn">Log Out</button>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>Capps-Batavia Fire Department &mdash; Boone County, Arkansas</p>
+</footer>
+
+<script src="nav.js"></script>
+<script>
+let adminPassword = '';
+
+const TYPE_LABELS = {
+  'burn-ban': 'Burn Ban',
+  'road-closure': 'Road Closure',
+  'emergency': 'Emergency',
+  'general': 'Notice',
+};
+
+function formatDate(ts) {
+  return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function loadAdminAlerts() {
+  const alerts = await fetch('/api/alerts').then(r => r.json());
+  const el = document.getElementById('admin-alerts-list');
+  if (!alerts.length) {
+    el.innerHTML = '<p style="color:#9ca3af;font-size:0.9rem">No active alerts.</p>';
+    return;
+  }
+  el.innerHTML = alerts.map(a => `
+    <div class="admin-alert-row" id="row-${a.id}">
+      <div class="info">
+        <strong>${escHtml(a.title)}</strong>
+        <span>${TYPE_LABELS[a.type] ?? a.type} &mdash; ${formatDate(a.postedAt)}</span>
+        <div style="margin-top:4px;font-size:0.82rem;color:#374151">${escHtml(a.message)}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="deleteAlert('${a.id}')">Remove</button>
+    </div>
+  `).join('');
+}
+
+async function deleteAlert(id) {
+  if (!confirm('Remove this alert?')) return;
+  const r = await fetch(`/api/alerts/${id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: adminPassword }),
+  });
+  if (r.ok) {
+    document.getElementById(`row-${id}`)?.remove();
+    const el = document.getElementById('admin-alerts-list');
+    if (!el.querySelector('.admin-alert-row')) {
+      el.innerHTML = '<p style="color:#9ca3af;font-size:0.9rem">No active alerts.</p>';
+    }
+  } else {
+    alert('Failed to remove alert. Check your session and try again.');
+  }
+}
+
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const pw = document.getElementById('password-input').value.trim();
+  if (!pw) return;
+  // Test password by attempting to post a dry-run (we'll just check via a real call)
+  const r = await fetch('/api/alerts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pw, type: '__test__', title: '__test__', message: '__test__' }),
+  });
+  if (r.status === 401) {
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  // If it went through, clean up the test alert immediately
+  if (r.ok) {
+    const a = await r.json();
+    await fetch(`/api/alerts/${a.id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+  }
+  adminPassword = pw;
+  document.getElementById('password-gate').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  loadAdminAlerts();
+});
+
+document.getElementById('password-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
+});
+
+document.getElementById('post-btn').addEventListener('click', async () => {
+  const type = document.getElementById('alert-type').value;
+  const title = document.getElementById('alert-title').value.trim();
+  const message = document.getElementById('alert-message').value.trim();
+  const statusEl = document.getElementById('post-status');
+
+  if (!title || !message) {
+    statusEl.textContent = 'Title and message are required.';
+    statusEl.className = 'err';
+    return;
+  }
+
+  statusEl.textContent = 'Posting…';
+  statusEl.className = '';
+
+  const r = await fetch('/api/alerts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: adminPassword, type, title, message }),
+  });
+
+  if (r.ok) {
+    document.getElementById('alert-title').value = '';
+    document.getElementById('alert-message').value = '';
+    statusEl.textContent = 'Alert posted successfully.';
+    statusEl.className = 'ok';
+    loadAdminAlerts();
+    setTimeout(() => { statusEl.textContent = ''; }, 3000);
+  } else {
+    statusEl.textContent = 'Failed to post alert.';
+    statusEl.className = 'err';
+  }
+});
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  adminPassword = '';
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('password-gate').style.display = 'block';
+  document.getElementById('password-input').value = '';
+});
+</script>
+</body>
+</html>
