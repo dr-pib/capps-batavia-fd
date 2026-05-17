@@ -4,7 +4,7 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const DATA_DIR = process.env.DATA_DIR || __dirname;
 const ALERTS_FILE = path.join(DATA_DIR, 'alerts.json');
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'cbfd-admin';
