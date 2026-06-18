@@ -12,7 +12,7 @@
 <div id="alert-banner"></div>
 
 <div class="page-hero-sm">
-  <h1>🚨 Community Alerts</h1>
+  <h1>Community Alerts</h1>
 </div>
 
 <div class="content-wrap narrow">
@@ -22,7 +22,6 @@
 
   <div id="alerts-list">
     <div class="no-alerts">
-      <div class="icon">⏳</div>
       <p>Loading alerts…</p>
     </div>
   </div>
@@ -51,7 +50,7 @@ async function loadAlerts() {
   const el = document.getElementById('alerts-list');
 
   if (!alerts.length) {
-    el.innerHTML = `<div class="no-alerts"><div class="icon">✅</div><p>No active alerts at this time.</p></div>`;
+    el.innerHTML = `<div class="no-alerts"><p>No active alerts at this time.</p></div>`;
     return;
   }
 
@@ -74,7 +73,7 @@ function escHtml(s) {
 }
 
 loadAlerts().catch(() => {
-  document.getElementById('alerts-list').innerHTML = `<div class="no-alerts"><div class="icon">⚠️</div><p>Could not load alerts. Please try again later.</p></div>`;
+  document.getElementById('alerts-list').innerHTML = `<div class="no-alerts"><p>Could not load alerts. Please try again later.</p></div>`;
 });
 </script>
 </body>

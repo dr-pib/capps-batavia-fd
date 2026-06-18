@@ -4,7 +4,7 @@
     { href: '/',                  label: 'Home' },
     { href: '/about.html',        label: 'About' },
     { href: '/service-area.html', label: 'Service Area' },
-    { href: '/alerts.html',       label: '🚨 Alerts', cls: 'nav-alerts-link' },
+    { href: '/alerts.html',       label: 'Alerts', cls: 'nav-alerts-link' },
     { href: '/join.html',         label: 'Join Us' },
     { href: '/donate.html',       label: 'Donate' },
     { href: '/contact.html',      label: 'Contact' },
@@ -24,7 +24,6 @@
   document.getElementById('site-header').innerHTML = `
     <div class="header-inner">
       <div class="site-title">
-        <span class="emblem">🚒</span>
         <span>Capps-Batavia Fire Department</span>
       </div>
       <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
@@ -41,7 +40,7 @@
     if (!alerts.length) return;
     const banner = document.getElementById('alert-banner');
     const first = alerts[0];
-    banner.innerHTML = `<div class="alert-banner-inner">⚠️ <span>${first.title}</span> &mdash; <a href="/alerts.html">View all alerts →</a></div>`;
+    banner.innerHTML = `<div class="alert-banner-inner"><span>${first.title}</span> &mdash; <a href="/alerts.html">View all alerts</a></div>`;
     banner.classList.add('visible');
   }).catch(() => {});
 })();

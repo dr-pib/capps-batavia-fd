@@ -1,15 +1,12 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_DIR = process.env.DATA_DIR || __dirname;
 const ALERTS_FILE = path.join(DATA_DIR, 'alerts.json');
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'cbfd-admin';
-
-const BOUNDARY_URL = 'https://services.arcgis.com/PwY9ZuZrdIPLMzkI/arcgis/rest/services/Boundaries/FeatureServer/59/query';
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -45,14 +42,7 @@ app.delete('/api/alerts/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-app.get('/api/boundary', async (req, res) => {
-  try {
-    const url = `${BOUNDARY_URL}?where=fdid_nfirsid%3D'05003'&outFields=*&f=json`;
-    const r = await fetch(url);
-    res.json(await r.json());
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
+// District boundary is served as a static file (public/boundary.json).
+// To refresh it from Arkansas GIS, run: npm run refresh-map
 
 app.listen(PORT, () => console.log(`CBFD site running on port ${PORT}`));

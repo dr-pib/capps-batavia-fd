@@ -1,3 +1,5 @@
 node_modules/
 .env
 alerts.json
+.claude/
+design notes.rtfd/

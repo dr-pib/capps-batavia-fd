@@ -42,6 +42,7 @@
   <span style="color:#f97316;font-weight:700;">—</span>
   <span>District Boundary</span>
   <span style="margin-left:16px;color:#9ca3af">Capps-Batavia Fire District, Boone County, Arkansas</span>
+  <span id="map-stats" style="margin-left:auto;color:#9ca3af"></span>
 </div>
 
 <div id="map-container" style="position:relative">
@@ -56,8 +57,7 @@
 <script src="nav.js"></script>
 <script>
 async function initMap() {
-  const data = await fetch('/api/boundary').then(r => r.json());
-  const bf = data.features[0];
+  const data = await fetch('/boundary.json').then(r => r.json());
 
   const map = L.map('map');
 
@@ -69,19 +69,26 @@ async function initMap() {
     subdomains: 'abcd', maxZoom: 19, opacity: 0.4,
   }).addTo(map);
 
-  const geojson = {
-    type: 'Feature',
-    geometry: {
-      type: bf.geometry.rings.length > 1 ? 'MultiPolygon' : 'Polygon',
-      coordinates: bf.geometry.rings.length > 1
-        ? bf.geometry.rings.map(r => [r]) : bf.geometry.rings,
-    },
-  };
-
-  const layer = L.geoJSON(geojson, {
+  const layer = L.geoJSON(data, {
     style: { color: '#f97316', weight: 3, fillColor: '#f97316', fillOpacity: 0.08, dashArray: '8 5' },
   }).addTo(map);
-  map.fitBounds(layer.getBounds(), { padding: [30, 30] });
+
+  // The map lives in a flex container; make sure Leaflet has measured its
+  // final size before fitting, otherwise tiles render into a mis-sized viewport.
+  const fit = () => { map.invalidateSize(); map.fitBounds(layer.getBounds(), { padding: [30, 30] }); };
+  fit();
+  window.addEventListener('resize', fit);
+
+  // Show area + household stats from the saved district data
+  const p = data.features[0]?.properties;
+  if (p) {
+    const fmt = n => Math.round(n).toLocaleString('en-US');
+    const parts = [];
+    if (p.square_miles) parts.push(`${fmt(p.square_miles)} sq mi`);
+    if (p.estimated_households) parts.push(`${fmt(p.estimated_households)} households`);
+    if (p.estimated_addresses) parts.push(`${fmt(p.estimated_addresses)} addresses`);
+    document.getElementById('map-stats').textContent = parts.join(' · ');
+  }
 
   document.getElementById('map-loading').style.display = 'none';
 }
