@@ -30,21 +30,13 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Community labels */
-    .community-marker {
-      display: flex; align-items: center; gap: 5px;
-      white-space: nowrap; width: auto !important; height: auto !important;
-      background: transparent !important; border: none !important;
+    .leaflet-tooltip.community-tip {
+      background: transparent; border: none; box-shadow: none; padding: 0;
+      color: #fff; white-space: nowrap;
       font: 600 12px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .community-marker .community-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #fff; border: 1.5px solid #cc2200;
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.45); flex-shrink: 0;
-    }
-    .community-marker .community-name {
-      color: #fff;
       text-shadow: 0 0 3px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,0.95);
     }
+    .leaflet-tooltip.community-tip::before { display: none; } /* hide pointer arrow */
   </style>
 </head>
 <body>
@@ -106,26 +98,6 @@ async function initMap() {
     style: { color: '#f97316', weight: 3, fillColor: '#f97316', fillOpacity: 0, dashArray: '8 5' },
   }).addTo(map);
 
-  // Local community labels (not shown by the basemap's generic place labels)
-  const communities = [
-    { name: 'Capps',              lat: 36.2356, lng: -93.1893 },
-    { name: 'Batavia',            lat: 36.2551, lng: -93.2227 },
-    { name: 'Bear Creek Springs', lat: 36.2976, lng: -93.1832 },
-    { name: 'Ridgeway',           lat: 36.3179, lng: -93.2044 },
-    { name: 'Grubb Springs',      lat: 36.2151, lng: -93.1546 },
-  ];
-  communities.forEach(c => {
-    L.marker([c.lat, c.lng], {
-      interactive: false, keyboard: false,
-      icon: L.divIcon({
-        className: 'community-marker',
-        iconSize: null,
-        iconAnchor: [4, 4],
-        html: `<span class="community-dot"></span><span class="community-name">${c.name}</span>`,
-      }),
-    }).addTo(map);
-  });
-
   // Fit to the district and "crop" the view (lock panning + stop zoom-out at
   // the fitted view). The map lives in a flex container, so we (re)apply this
   // whenever it gets a real size — a ResizeObserver avoids the race where an
@@ -141,6 +113,29 @@ async function initMap() {
   };
   new ResizeObserver(applyView).observe(document.getElementById('map'));
   applyView();
+
+  // Local community labels (not shown by the basemap's generic place labels).
+  // Added after the view is set, since permanent tooltips project immediately.
+  const communities = [
+    { name: 'Liberty',            lat: 36.3457, lng: -93.2105 },
+    { name: 'Prosperity',         lat: 36.3328, lng: -93.2010 },
+    { name: 'Ridgeway',           lat: 36.3179, lng: -93.2044 },
+    { name: 'Bear Creek Springs', lat: 36.2976, lng: -93.1832, dir: 'left' },
+    { name: 'Francis',            lat: 36.2920, lng: -93.1816 },
+    { name: 'Little Arkansaw',    lat: 36.2892, lng: -93.2366, dir: 'left' },
+    { name: 'Batavia',            lat: 36.2551, lng: -93.2227 },
+    { name: 'Capps',              lat: 36.2356, lng: -93.1893 },
+    { name: 'Grubb Springs',      lat: 36.2151, lng: -93.1546 },
+  ];
+  communities.forEach(c => {
+    const dir = c.dir || 'right';
+    const offset = dir === 'left' ? [-7, 0] : [7, 0];
+    L.circleMarker([c.lat, c.lng], {
+      radius: 4, color: '#cc2200', weight: 1.5, fillColor: '#fff', fillOpacity: 1, interactive: false,
+    }).addTo(map).bindTooltip(c.name, {
+      permanent: true, direction: dir, offset, className: 'community-tip', interactive: false,
+    });
+  });
 
   // Show area + household stats from the saved district data
   const p = data.features[0]?.properties;
