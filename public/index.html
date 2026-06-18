@@ -8,48 +8,103 @@
 </head>
 <body>
 
-<header id="site-header"></header>
+<div id="site-header"></div>
 <div id="alert-banner"></div>
 
-<div class="page-hero">
-  <h1>Capps-Batavia Fire Department</h1>
-  <p>Serving the Capps-Batavia community and surrounding areas of Boone County, Arkansas</p>
-  <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-    <a href="/alerts.html" class="btn btn-primary">View Community Alerts</a>
-    <a href="/join.html" class="btn btn-outline" style="color:#fff;border-color:#fff">Join Our Team</a>
-  </div>
-</div>
-
-<div class="content-wrap">
-  <div class="card-grid">
-    <div class="card">
-      <h3>Service Area</h3>
-      <p>We protect homes and businesses throughout the Capps-Batavia Fire District in Boone County, Arkansas.</p>
-      <a href="/service-area.html" class="btn btn-primary">View Map</a>
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">Boone County &middot; Arkansas</div>
+    <div class="rule"></div>
+    <h1>Protecting the Capps-Batavia community</h1>
+    <p class="lede">An all-volunteer fire department serving the homes, families, and wild country of the Capps-Batavia Fire District.</p>
+    <div class="hero-actions">
+      <a href="/service-area.html" class="btn btn-primary">View Service Area</a>
+      <a href="/alerts.html" class="btn btn-ghost">Community Alerts</a>
     </div>
-    <div class="card">
+  </div>
+</section>
+
+<section class="intro">
+  <div class="kicker">Our Mission</div>
+  <h2>Neighbors protecting neighbors across 67 square miles of the Ozarks.</h2>
+  <p>The Capps-Batavia Fire Department is staffed entirely by volunteers who give their time and training to protect the lives and property of everyone in our district. We respond to fires, accidents, and emergencies &mdash; and we're always looking for dedicated people to stand alongside us.</p>
+</section>
+
+<section class="links">
+  <div class="links-grid">
+    <div class="link-card">
+      <span class="num">01</span>
       <h3>About Us</h3>
-      <p>Learn about our department's history, mission, and the people who make it possible.</p>
-      <a href="/about.html" class="btn btn-primary">Our Story</a>
+      <p>Our history, our mission, and the volunteers who make it possible.</p>
+      <a href="/about.html" class="more">Our story</a>
     </div>
-    <div class="card">
+    <div class="link-card">
+      <span class="num">02</span>
+      <h3>Join Our Team</h3>
+      <p>No experience required. We provide the training &mdash; you bring the commitment.</p>
+      <a href="/join.html" class="more">Learn how</a>
+    </div>
+    <div class="link-card">
+      <span class="num">03</span>
       <h3>Support the Department</h3>
-      <p>Your donations help us maintain equipment and training to better serve our community.</p>
-      <a href="/donate.html" class="btn btn-primary">Donate</a>
+      <p>Donations keep our equipment, gear, and training ready when it counts.</p>
+      <a href="/donate.html" class="more">Ways to give</a>
     </div>
-    <div class="card">
+    <div class="link-card">
+      <span class="num">04</span>
       <h3>Contact Us</h3>
-      <p>Have a question or want to get in touch? We'd love to hear from you.</p>
-      <a href="/contact.html" class="btn btn-primary">Get in Touch</a>
+      <p>Questions, or want to get involved? We'd love to hear from you.</p>
+      <a href="/contact.html" class="more">Get in touch</a>
     </div>
   </div>
-</div>
+</section>
 
-<footer>
-  <p>Capps-Batavia Fire Department &mdash; Boone County, Arkansas</p>
-  <p style="margin-top:6px"><a href="mailto:cbfd5003@gmail.com">cbfd5003@gmail.com</a></p>
-</footer>
+<div id="site-footer"></div>
 
 <script src="nav.js"></script>
+<script>
+(function () {
+  // ── Hero image config ───────────────────────────────────────────────
+  // Put image files in /public/images and list them here.
+  //   • No date fields → regular rotation (a random one shows each visit).
+  //   • from / to      → one-off date range "YYYY-MM-DD" (inclusive).
+  //   • season {fromMonth,toMonth} → recurs every year (months 1-12; may
+  //     wrap, e.g. {fromMonth:12,toMonth:2} = Dec–Feb).
+  // Scheduled images active today take priority over the rotation pool.
+  const HERO_IMAGES = [
+    // Rotation pool — placeholders until real department photos arrive:
+    { src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2200&q=70' },
+    { src: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2200&q=70' },
+    // Examples (uncomment & point at your files):
+    // { src: 'images/parade.jpg', from: '2026-07-01', to: '2026-07-07' },
+    // { src: 'images/first-snow.jpg', season: { fromMonth: 12, toMonth: 2 } },
+  ];
+  const OVERLAY = 'linear-gradient(180deg, rgba(10,13,18,0.45) 0%, rgba(10,13,18,0.25) 40%, rgba(10,13,18,0.7) 100%)';
+
+  const isScheduled = (img) => !!(img.from || img.to || img.season);
+  function activeToday(img, now) {
+    if (img.from || img.to) {
+      const t = now.toISOString().slice(0, 10);
+      return (!img.from || t >= img.from) && (!img.to || t <= img.to);
+    }
+    if (img.season) {
+      const m = now.getMonth() + 1, a = img.season.fromMonth, b = img.season.toMonth;
+      return a <= b ? (m >= a && m <= b) : (m >= a || m <= b);
+    }
+    return false;
+  }
+
+  const now = new Date();
+  const scheduled = HERO_IMAGES.filter(i => isScheduled(i) && activeToday(i, now));
+  const pool = scheduled.length ? scheduled : HERO_IMAGES.filter(i => !isScheduled(i));
+  const hero = document.querySelector('.hero');
+  if (hero && pool.length) {
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    const pre = new Image();
+    pre.onload = () => { hero.style.backgroundImage = `${OVERLAY}, url('${pick.src}')`; };
+    pre.src = pick.src;
+  }
+})();
+</script>
 </body>
 </html>

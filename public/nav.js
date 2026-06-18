@@ -1,46 +1,74 @@
-// Injects consistent header + alert banner into every page
+// Injects the shared chrome (utility bar, masthead + nav, alert banner, footer)
+// into every page. Pages just need: <div id="site-header"></div>,
+// <div id="alert-banner"></div>, and <div id="site-footer"></div>.
 (function () {
   const links = [
     { href: '/',                  label: 'Home' },
     { href: '/about.html',        label: 'About' },
     { href: '/service-area.html', label: 'Service Area' },
-    { href: '/alerts.html',       label: 'Alerts', cls: 'nav-alerts-link' },
+    { href: '/alerts.html',       label: 'Alerts', cls: 'alerts' },
     { href: '/join.html',         label: 'Join Us' },
     { href: '/donate.html',       label: 'Donate' },
     { href: '/contact.html',      label: 'Contact' },
   ];
 
   const current = location.pathname.replace(/\/$/, '') || '/';
-
-  function isActive(href) {
+  const isActive = (href) => {
     const h = href.replace(/\/$/, '') || '/';
     return current === h || (h !== '/' && current.startsWith(h));
-  }
+  };
 
   const navHtml = links.map(l =>
     `<a href="${l.href}" class="${(l.cls || '') + (isActive(l.href) ? ' active' : '')}">${l.label}</a>`
   ).join('');
 
-  document.getElementById('site-header').innerHTML = `
-    <div class="header-inner">
-      <div class="site-title">
-        <span>Capps-Batavia Fire Department</span>
+  const header = document.getElementById('site-header');
+  if (header) {
+    header.innerHTML = `
+      <div class="util-bar">
+        <div class="util-inner">
+          <span class="brand-mini">Capps-Batavia Fire Department</span>
+          <span class="emergency">Emergencies: Dial <strong>9-1-1</strong></span>
+        </div>
       </div>
-      <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
-      <nav id="main-nav">${navHtml}</nav>
-    </div>
-  `;
+      <div class="masthead">
+        <div class="masthead-inner">
+          <button class="menu-toggle" id="menu-toggle" aria-label="Menu">&#9776;</button>
+          <div class="logo-row">
+            <span class="emblem" aria-hidden="true"></span>
+            <div class="wordmark">
+              <div class="name">Capps-Batavia Fire Department</div>
+              <div class="sub">Volunteer Fire Protection &middot; Boone County, Arkansas</div>
+            </div>
+          </div>
+          <nav class="primary" id="main-nav">${navHtml}</nav>
+        </div>
+      </div>
+    `;
+    const toggle = document.getElementById('menu-toggle');
+    if (toggle) toggle.addEventListener('click', () => document.getElementById('main-nav').classList.toggle('open'));
+  }
 
-  document.getElementById('menu-toggle').addEventListener('click', () => {
-    document.getElementById('main-nav').classList.toggle('open');
-  });
+  const footer = document.getElementById('site-footer');
+  if (footer) {
+    footer.outerHTML = `
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <div class="fname">Capps-Batavia Fire Department</div>
+          <div class="fsub">Boone County, Arkansas &middot; <a href="mailto:cbfd5003@gmail.com">cbfd5003@gmail.com</a></div>
+          <div class="femergency">For emergencies, dial <strong>9-1-1</strong></div>
+        </div>
+      </footer>
+    `;
+  }
 
-  // Load and show alert banner if active alerts exist
-  fetch('/api/alerts').then(r => r.json()).then(alerts => {
-    if (!alerts.length) return;
-    const banner = document.getElementById('alert-banner');
-    const first = alerts[0];
-    banner.innerHTML = `<div class="alert-banner-inner"><span>${first.title}</span> &mdash; <a href="/alerts.html">View all alerts</a></div>`;
-    banner.classList.add('visible');
-  }).catch(() => {});
+  // Show alert banner if there are active alerts
+  const banner = document.getElementById('alert-banner');
+  if (banner) {
+    fetch('/api/alerts').then(r => r.json()).then(alerts => {
+      if (!alerts.length) return;
+      banner.innerHTML = `<div class="alert-banner-inner"><span>${alerts[0].title}</span> &mdash; <a href="/alerts.html">View all alerts</a></div>`;
+      banner.classList.add('visible');
+    }).catch(() => {});
+  }
 })();
