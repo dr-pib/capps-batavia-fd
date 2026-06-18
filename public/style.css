@@ -73,10 +73,10 @@ nav.primary a.alerts { color: #ff8a73; }
   text-align: center; color: #fff; padding: 80px 24px; background: var(--dark-soft);
   background-size: cover; background-position: center;
 }
-.hero-content { max-width: 760px; }
-.hero .eyebrow { text-transform: uppercase; letter-spacing: 0.32em; font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+.hero-content { max-width: 860px; }
+.hero .eyebrow { text-transform: uppercase; letter-spacing: 0.26em; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.88); }
 .hero .rule { width: 64px; height: 2px; background: var(--red-bright); margin: 20px auto; }
-.hero h1 { font-family: var(--serif); font-weight: 700; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.1; text-shadow: 0 2px 24px rgba(0,0,0,0.4); }
+.hero h1 { font-family: var(--serif); font-weight: 700; font-size: clamp(1.1rem, 5.6vw, 3.1rem); line-height: 1.1; white-space: nowrap; text-shadow: 0 2px 24px rgba(0,0,0,0.4); }
 .hero p.lede { margin-top: 18px; font-size: 1.06rem; color: rgba(255,255,255,0.92); line-height: 1.7; text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
 .hero-actions { margin-top: 30px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
