@@ -38,7 +38,7 @@
             <span class="emblem" aria-hidden="true"></span>
             <div class="wordmark">
               <div class="name">Capps-Batavia Fire Department</div>
-              <div class="sub">Volunteer Fire Protection &middot; Boone County, Arkansas</div>
+              <div class="sub">Serving our community through volunteer fire &amp; EMS</div>
             </div>
           </div>
           <nav class="primary" id="main-nav">${navHtml}</nav>
