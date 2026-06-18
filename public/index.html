@@ -72,12 +72,12 @@
   //     wrap, e.g. {fromMonth:12,toMonth:2} = Dec–Feb).
   // Scheduled images active today take priority over the rotation pool.
   const HERO_IMAGES = [
-    // Rotation pool — placeholders until real department photos arrive:
+    // Single placeholder until real department photos arrive:
     { src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2200&q=70' },
-    { src: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2200&q=70' },
-    // Examples (uncomment & point at your files):
-    // { src: 'images/parade.jpg', from: '2026-07-01', to: '2026-07-07' },
-    // { src: 'images/first-snow.jpg', season: { fromMonth: 12, toMonth: 2 } },
+    // Add more for rotation, or schedule them. Examples (point at files in public/images):
+    // { src: 'images/creek.jpg' },                                          // joins the random rotation
+    // { src: 'images/parade.jpg', from: '2026-07-01', to: '2026-07-07' },   // one-off dates
+    // { src: 'images/first-snow.jpg', season: { fromMonth: 12, toMonth: 2 } }, // recurring season
   ];
   const OVERLAY = 'linear-gradient(180deg, rgba(10,13,18,0.45) 0%, rgba(10,13,18,0.25) 40%, rgba(10,13,18,0.7) 100%)';
 
