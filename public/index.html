@@ -12,6 +12,8 @@
 <div id="alert-banner"></div>
 
 <section class="hero">
+  <div class="hero-blur" id="hero-blur"></div>
+  <div class="hero-photo" id="hero-photo"></div>
   <div class="hero-content">
     <div class="eyebrow">Capps &bull; Batavia &bull; Ridgeway &bull; Bear Creek Springs</div>
     <div class="rule"></div>
@@ -66,33 +68,41 @@
 (function () {
   // ── Hero image config ───────────────────────────────────────────────
   // Put image files in /public/images and list them here.
-  //   • No date fields → regular rotation (a random one shows each visit).
-  //   • from / to      → one-off date range "YYYY-MM-DD" (inclusive).
-  //   • season {fromMonth,toMonth} → recurs every year (months 1-12; may
-  //     wrap, e.g. {fromMonth:12,toMonth:2} = Dec–Feb).
-  // Scheduled images active today take priority over the rotation pool.
-  // `weight` sets how often an image shows in the rotation (relative; default 1).
+  //   • weight → how often it shows in the rotation (relative; default 1).
+  //   • fit: 'contain' → smaller photos shown at true size, centered, with a
+  //     blurred copy filling the rest (so they're never upscaled / pixelated).
+  //   • season {fromMonth,toMonth} → only eligible in those months (recurs
+  //     yearly; may wrap, e.g. {fromMonth:12,toMonth:2} = Dec–Feb).
+  //   • from / to → only eligible within a one-off date range "YYYY-MM-DD".
+  // Seasonal/dated images JOIN the rotation while in season; year-round images
+  // (no season/date) are always eligible.
   const HERO_IMAGES = [
-    { src: 'images/summer.jpg',   weight: 90 }, // main image, ~90% of visits
-    { src: 'images/dial-911.jpg', weight: 10 }, // ~10% of visits
-    // Add more (weight defaults to 1) or schedule them. Examples:
-    // { src: 'images/creek.jpg' },                                          // joins the rotation
-    // { src: 'images/parade.jpg', from: '2026-07-01', to: '2026-07-07' },   // one-off dates
-    // { src: 'images/first-snow.jpg', season: { fromMonth: 12, toMonth: 2 } }, // recurring season
+    // Year-round — large, fills the screen sharply
+    { src: 'images/dial-911.jpg',         weight: 22 },
+    { src: 'images/summer-hydrant.jpg',   weight: 18 },
+    { src: 'images/car-fire.jpg',         weight: 12 },
+    { src: 'images/summer.jpg',           weight: 8 },  // green-hills landscape (AI placeholder)
+    // Year-round — smaller source photos, shown sharp inside a blurred fill
+    { src: 'images/two-firefighters.jpg', weight: 12, fit: 'contain' },
+    { src: 'images/dump-tank.jpg',        weight: 10, fit: 'contain' },
+    { src: 'images/brush-trucks.jpg',     weight: 10, fit: 'contain' },
+    { src: 'images/field-fire.jpg',       weight: 6,  fit: 'contain' },
+    // Winter only (Dec–Feb)
+    { src: 'images/snow.jpg', weight: 18, fit: 'contain', season: { fromMonth: 12, toMonth: 2 } },
   ];
-  const OVERLAY = 'linear-gradient(180deg, rgba(10,13,18,0.45) 0%, rgba(10,13,18,0.25) 40%, rgba(10,13,18,0.7) 100%)';
 
-  const isScheduled = (img) => !!(img.from || img.to || img.season);
-  function activeToday(img, now) {
+  function eligible(img, now) {
+    if (!img.from && !img.to && !img.season) return true; // year-round
+    let ok = false;
     if (img.from || img.to) {
       const t = now.toISOString().slice(0, 10);
-      return (!img.from || t >= img.from) && (!img.to || t <= img.to);
+      if ((!img.from || t >= img.from) && (!img.to || t <= img.to)) ok = true;
     }
     if (img.season) {
       const m = now.getMonth() + 1, a = img.season.fromMonth, b = img.season.toMonth;
-      return a <= b ? (m >= a && m <= b) : (m >= a || m <= b);
+      if (a <= b ? (m >= a && m <= b) : (m >= a || m <= b)) ok = true;
     }
-    return false;
+    return ok;
   }
 
   function weightedPick(items) {
@@ -103,13 +113,17 @@
   }
 
   const now = new Date();
-  const scheduled = HERO_IMAGES.filter(i => isScheduled(i) && activeToday(i, now));
-  const pool = scheduled.length ? scheduled : HERO_IMAGES.filter(i => !isScheduled(i));
-  const hero = document.querySelector('.hero');
-  if (hero && pool.length) {
+  const pool = HERO_IMAGES.filter(i => eligible(i, now));
+  const blur = document.getElementById('hero-blur');
+  const photo = document.getElementById('hero-photo');
+  if (blur && photo && pool.length) {
     const pick = weightedPick(pool);
     const pre = new Image();
-    pre.onload = () => { hero.style.backgroundImage = `${OVERLAY}, url('${pick.src}')`; };
+    pre.onload = () => {
+      blur.style.backgroundImage = `url('${pick.src}')`;
+      photo.style.backgroundImage = `url('${pick.src}')`;
+      photo.style.backgroundSize = pick.fit === 'contain' ? 'contain' : 'cover';
+    };
     pre.src = pick.src;
   }
 })();

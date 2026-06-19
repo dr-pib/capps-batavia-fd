@@ -6,6 +6,7 @@ near the bottom of `public/index.html`. Each entry:
 ```js
 { src: 'images/creek.jpg' }                                  // regular rotation (a random one shows each visit)
 { src: 'images/summer.jpg', weight: 90 }                     // weighted rotation — higher weight shows more often (default weight is 1)
+{ src: 'images/small-photo.jpg', fit: 'contain' }            // for smaller photos: shown sharp at true size, centered, with a blurred copy filling the rest (never upscaled)
 { src: 'images/parade.jpg', from: '2026-07-01', to: '2026-07-07' }   // one-off date range (inclusive)
 { src: 'images/first-snow.jpg', season: { fromMonth: 12, toMonth: 2 } } // recurring every year (Dec–Feb; months may wrap)
 ```
