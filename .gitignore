@@ -1,6 +1,7 @@
 node_modules/
 .env
 alerts.json
+.DS_Store
 .claude/
 design notes.rtfd/
 
