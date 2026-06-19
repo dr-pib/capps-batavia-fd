@@ -3,3 +3,7 @@ node_modules/
 alerts.json
 .claude/
 design notes.rtfd/
+
+# Sensitive / non-website material that must never be committed
+CBFD Dues Documents CCW/
+*.xlsx
