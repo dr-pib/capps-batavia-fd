@@ -14,6 +14,12 @@
 <section class="hero">
   <div class="hero-blur" id="hero-blur"></div>
   <div class="hero-photo" id="hero-photo"></div>
+  <button class="hero-nav prev" id="hero-prev" type="button" aria-label="Previous photo">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="hero-nav next" id="hero-next" type="button" aria-label="Next photo">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
   <div class="hero-content">
     <div class="eyebrow">Capps &bull; Batavia &bull; Ridgeway &bull; Bear Creek Springs</div>
     <div class="rule"></div>
@@ -116,15 +122,34 @@
   const pool = HERO_IMAGES.filter(i => eligible(i, now));
   const blur = document.getElementById('hero-blur');
   const photo = document.getElementById('hero-photo');
+  const prevBtn = document.getElementById('hero-prev');
+  const nextBtn = document.getElementById('hero-next');
+
   if (blur && photo && pool.length) {
-    const pick = weightedPick(pool);
-    const pre = new Image();
-    pre.onload = () => {
-      blur.style.backgroundImage = `url('${pick.src}')`;
-      photo.style.backgroundImage = `url('${pick.src}')`;
-      photo.style.backgroundSize = pick.fit === 'contain' ? 'contain' : 'cover';
-    };
-    pre.src = pick.src;
+    // First image shown = weighted random pick (the "main" one); the arrows
+    // let visitors browse the rest. No auto-advance.
+    let idx = Math.max(0, pool.indexOf(weightedPick(pool)));
+
+    function show(i) {
+      const item = pool[i];
+      const pre = new Image();
+      pre.onload = () => {
+        blur.style.backgroundImage = `url('${item.src}')`;
+        photo.style.backgroundImage = `url('${item.src}')`;
+        photo.style.backgroundSize = item.fit === 'contain' ? 'contain' : 'cover';
+      };
+      pre.src = item.src;
+    }
+    show(idx);
+
+    if (pool.length > 1) {
+      const go = (d) => { idx = (idx + d + pool.length) % pool.length; show(idx); };
+      prevBtn.addEventListener('click', () => go(-1));
+      nextBtn.addEventListener('click', () => go(1));
+    } else if (prevBtn && nextBtn) {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    }
   }
 })();
 </script>
