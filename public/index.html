@@ -71,10 +71,12 @@
   //   • season {fromMonth,toMonth} → recurs every year (months 1-12; may
   //     wrap, e.g. {fromMonth:12,toMonth:2} = Dec–Feb).
   // Scheduled images active today take priority over the rotation pool.
+  // `weight` sets how often an image shows in the rotation (relative; default 1).
   const HERO_IMAGES = [
-    { src: 'images/hero-ozarks.jpg' },
-    // Add more for rotation, or schedule them. Examples (point at files in public/images):
-    // { src: 'images/creek.jpg' },                                          // joins the random rotation
+    { src: 'images/summer.jpg',   weight: 90 }, // main image, ~90% of visits
+    { src: 'images/dial-911.jpg', weight: 10 }, // ~10% of visits
+    // Add more (weight defaults to 1) or schedule them. Examples:
+    // { src: 'images/creek.jpg' },                                          // joins the rotation
     // { src: 'images/parade.jpg', from: '2026-07-01', to: '2026-07-07' },   // one-off dates
     // { src: 'images/first-snow.jpg', season: { fromMonth: 12, toMonth: 2 } }, // recurring season
   ];
@@ -93,12 +95,19 @@
     return false;
   }
 
+  function weightedPick(items) {
+    const total = items.reduce((s, i) => s + (i.weight || 1), 0);
+    let r = Math.random() * total;
+    for (const it of items) { r -= (it.weight || 1); if (r < 0) return it; }
+    return items[items.length - 1];
+  }
+
   const now = new Date();
   const scheduled = HERO_IMAGES.filter(i => isScheduled(i) && activeToday(i, now));
   const pool = scheduled.length ? scheduled : HERO_IMAGES.filter(i => !isScheduled(i));
   const hero = document.querySelector('.hero');
   if (hero && pool.length) {
-    const pick = pool[Math.floor(Math.random() * pool.length)];
+    const pick = weightedPick(pool);
     const pre = new Image();
     pre.onload = () => { hero.style.backgroundImage = `${OVERLAY}, url('${pick.src}')`; };
     pre.src = pick.src;
