@@ -132,11 +132,16 @@
 
     function show(i) {
       const item = pool[i];
+      const contain = item.fit === 'contain';
       const pre = new Image();
       pre.onload = () => {
         blur.style.backgroundImage = `url('${item.src}')`;
         photo.style.backgroundImage = `url('${item.src}')`;
-        photo.style.backgroundSize = item.fit === 'contain' ? 'contain' : 'cover';
+        photo.style.backgroundSize = contain ? 'contain' : 'cover';
+        // For small photos, the blur mirrors the photo's framing (contain) but
+        // enlarged, so its edges continue the photo instead of showing a crop.
+        blur.style.backgroundSize = contain ? 'contain' : 'cover';
+        blur.style.transform = contain ? 'scale(1.9)' : 'scale(1.2)';
       };
       pre.src = item.src;
     }
