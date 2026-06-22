@@ -11,7 +11,6 @@ _Express-served website for the Capps-Batavia Volunteer Fire Department (Boone C
 
 ## Backlog
 - [ ] Confirm DATA_DIR points at a Railway volume so alerts.json survives redeploys (it currently defaults to the repo dir, so alerts would be lost on each deploy)
-- [ ] Add a basic README (setup, env vars, deploy notes)
 
 ## Done
 - [x] Removed decorative emoji sitewide (kept the hamburger mobile-menu glyph)
@@ -20,4 +19,7 @@ _Express-served website for the Capps-Batavia Volunteer Fire Department (Boone C
 - [x] Dropped node-fetch (Node 22 has built-in fetch)
 - [x] Service Area map: cropped to the district, dimmed-outside mask, town and highway labels, 9 community labels, 3 fire-station icons
 - [x] Full site redesign: shared design system in style.css and nav.js (serif headings, warm light base, dark masthead and footer, red accent); hero supports weighted rotation, scheduling, blurred-fill, and manual arrows
-- [x] Join page: full copy, an RSVP form via Formspree (id mbdvjrog, emails cbfd5003@gmail.com), and the "What to Expect" onboarding steps
+- [x] Join page: full copy (Why Volunteer, What We Do with six categorized work cards, Requirements), an RSVP form via Formspree (id mbdvjrog, emails cbfd5003@gmail.com), and the "What to Expect" onboarding steps
+- [x] Hero CTAs set to Join Us (primary) and View Service Area (secondary); nav alert item renamed to a red "Community Alerts"
+- [x] Scrubbed all em dashes from site copy; fixed the donate check-payable formatting
+- [x] Added a project README
