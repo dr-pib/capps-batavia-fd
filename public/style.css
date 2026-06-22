@@ -196,6 +196,11 @@ section a.inline:hover { text-decoration: underline; }
 .no-alerts { text-align: center; padding: 60px 20px; color: #9ca3af; }
 .no-alerts p { font-size: 1rem; }
 
+/* ── Numbered steps (Join "What to Expect") ── */
+.steps { padding-left: 24px; line-height: 1.6; color: var(--ink-soft); margin-bottom: 8px; }
+.steps li { margin-bottom: 9px; padding-left: 4px; }
+.steps li::marker { color: var(--red); font-weight: 700; }
+
 /* ── Task list (Join page "What We Do") ── */
 .task-list { columns: 2; column-gap: 36px; margin: 0 0 16px; padding-left: 20px; line-height: 1.75; color: var(--ink-soft); }
 .task-list li { break-inside: avoid; margin-bottom: 4px; padding-left: 2px; }
