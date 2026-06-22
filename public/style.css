@@ -196,6 +196,13 @@ section a.inline:hover { text-decoration: underline; }
 .no-alerts { text-align: center; padding: 60px 20px; color: #9ca3af; }
 .no-alerts p { font-size: 1rem; }
 
+/* ── Message form (Join page) ── */
+.message-form { background: var(--paper-2); border: 1px solid var(--edge); border-radius: 6px; padding: 24px; max-width: 540px; margin-top: 18px; }
+.message-form .btn { margin-top: 4px; }
+.form-status { font-size: 0.9rem; margin-top: 12px; min-height: 20px; line-height: 1.5; }
+.form-status.ok { color: #15803d; font-weight: 600; }
+.form-status.err { color: #b91c1c; }
+
 /* ── Placeholder box ── */
 .placeholder-box {
   background: #fbf3e6; border: 1px dashed #c9922e; border-radius: 4px;

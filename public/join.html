@@ -54,11 +54,29 @@
   <section>
     <h2>How to Apply</h2>
     <p>Applications must be filled out at a training meeting. Monthly training meetings are held on the third Monday of each month at 7:00pm at the Capps Fire Station, 4391 Old Capps Rd, Harrison, AR 72601. Rarely, monthly training meetings are rescheduled.</p>
-    <p>If you're interested in attending to meet our personnel and complete an application, send us a message using the options below.</p>
-    <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
-      <a href="mailto:cbfd5003@gmail.com" class="btn btn-primary">Email Us</a>
-      <a href="/contact.html" class="btn btn-outline">Contact Page</a>
-    </div>
+    <p>If you're interested in attending to meet our personnel and complete an application, send us a message using the form below.</p>
+
+    <form id="join-form" class="message-form" novalidate>
+      <div class="form-group">
+        <label for="jf-name">Name</label>
+        <input type="text" id="jf-name" name="name" autocomplete="name" required />
+      </div>
+      <div class="form-group">
+        <label for="jf-email">Email</label>
+        <input type="email" id="jf-email" name="email" autocomplete="email" required />
+      </div>
+      <div class="form-group">
+        <label for="jf-phone">Phone (optional)</label>
+        <input type="tel" id="jf-phone" name="phone" autocomplete="tel" />
+      </div>
+      <div class="form-group">
+        <label for="jf-message">Message</label>
+        <textarea id="jf-message" name="message" placeholder="Tell us a bit about yourself, and any questions you have." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" id="jf-submit">Send Message</button>
+      <div id="jf-status" class="form-status" role="status" aria-live="polite"></div>
+    </form>
+    <p style="margin-top:14px;font-size:0.9rem;color:var(--ink-soft)">Prefer email? Reach us directly at <a href="mailto:cbfd5003@gmail.com" style="color:var(--red);font-weight:600">cbfd5003@gmail.com</a>.</p>
   </section>
 
 </div>
@@ -66,5 +84,62 @@
 <div id="site-footer"></div>
 
 <script src="nav.js"></script>
+<script>
+(function () {
+  // ── Application form ────────────────────────────────────────────────
+  // Submissions are emailed to the department via Formspree (free).
+  //   1. Create a form at https://formspree.io (send-to: cbfd5003@gmail.com)
+  //   2. Copy the form ID from your endpoint
+  //      (e.g. https://formspree.io/f/xrgkabcd  ->  'xrgkabcd')
+  //   3. Paste it below, between the quotes.
+  const FORMSPREE_ID = 'YOUR_FORM_ID';
+
+  const form = document.getElementById('join-form');
+  if (!form) return;
+  const statusEl = document.getElementById('jf-status');
+  const submitBtn = document.getElementById('jf-submit');
+  const connected = FORMSPREE_ID && FORMSPREE_ID !== 'YOUR_FORM_ID';
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusEl.className = 'form-status';
+
+    if (!form.checkValidity()) {
+      statusEl.textContent = 'Please add your name, email, and a message.';
+      statusEl.classList.add('err');
+      return;
+    }
+    if (!connected) {
+      statusEl.textContent = 'Thanks for your interest! Our message form is being set up. For now, please email us at cbfd5003@gmail.com.';
+      statusEl.classList.add('err');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    try {
+      const res = await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form),
+      });
+      if (res.ok) {
+        form.reset();
+        statusEl.textContent = 'Thank you! Your message has been sent. We will be in touch.';
+        statusEl.classList.add('ok');
+      } else {
+        statusEl.textContent = 'Sorry, something went wrong. Please email us at cbfd5003@gmail.com.';
+        statusEl.classList.add('err');
+      }
+    } catch (err) {
+      statusEl.textContent = 'Sorry, something went wrong. Please email us at cbfd5003@gmail.com.';
+      statusEl.classList.add('err');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Message';
+    }
+  });
+})();
+</script>
 </body>
 </html>
