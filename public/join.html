@@ -54,9 +54,11 @@
   <section>
     <h2>How to Apply</h2>
     <p>Applications must be filled out at a training meeting. Monthly training meetings are held on the third Monday of each month at 7:00pm at the Capps Fire Station, 4391 Old Capps Rd, Harrison, AR 72601. Rarely, monthly training meetings are rescheduled.</p>
-    <p>If you're interested in attending to meet our personnel and complete an application, send us a message using the form below.</p>
+    <p>If you're interested in attending to meet our personnel and complete an application, fill out the form below and choose the training meeting you plan to attend. We'll be expecting you, and we have your contact information in the rare case a meeting is rescheduled.</p>
 
     <form id="join-form" class="message-form" novalidate>
+      <input type="hidden" name="_subject" value="New volunteer interest (Join form)" />
+      <input type="hidden" name="message" value="I am interested in becoming a volunteer for your department." />
       <div class="form-group">
         <label for="jf-name">Name</label>
         <input type="text" id="jf-name" name="name" autocomplete="name" required />
@@ -66,14 +68,16 @@
         <input type="email" id="jf-email" name="email" autocomplete="email" required />
       </div>
       <div class="form-group">
-        <label for="jf-phone">Phone (optional)</label>
-        <input type="tel" id="jf-phone" name="phone" autocomplete="tel" />
+        <label for="jf-phone">Phone</label>
+        <input type="tel" id="jf-phone" name="phone" autocomplete="tel" required />
       </div>
       <div class="form-group">
-        <label for="jf-message">Message</label>
-        <textarea id="jf-message" name="message" placeholder="Tell us a bit about yourself, and any questions you have." required></textarea>
+        <label for="jf-date">Training meeting you plan to attend</label>
+        <select id="jf-date" name="training_date" required>
+          <option value="" disabled selected>Select a date</option>
+        </select>
       </div>
-      <button type="submit" class="btn btn-primary" id="jf-submit">Send Message</button>
+      <button type="submit" class="btn btn-primary" id="jf-submit">Send</button>
       <div id="jf-status" class="form-status" role="status" aria-live="polite"></div>
     </form>
     <p style="margin-top:14px;font-size:0.9rem;color:var(--ink-soft)">Prefer email? Reach us directly at <a href="mailto:cbfd5003@gmail.com" style="color:var(--red);font-weight:600">cbfd5003@gmail.com</a>.</p>
@@ -100,12 +104,36 @@
   const submitBtn = document.getElementById('jf-submit');
   const connected = FORMSPREE_ID && FORMSPREE_ID !== 'YOUR_FORM_ID';
 
+  // Populate the training-meeting dropdown with the next six "third Monday"
+  // dates. It's computed from today, so the list rolls forward automatically.
+  const thirdMonday = (year, month) => {
+    const first = new Date(year, month, 1);
+    const offset = (8 - first.getDay()) % 7; // days from the 1st to the first Monday
+    return new Date(year, month, 1 + offset + 14);
+  };
+  const dateSelect = document.getElementById('jf-date');
+  if (dateSelect) {
+    const today = new Date();
+    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    let added = 0;
+    for (let i = 0; i < 12 && added < 6; i++) {
+      const d = thirdMonday(today.getFullYear(), today.getMonth() + i);
+      if (d < startOfToday) continue; // skip a third Monday that has already passed
+      const label = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) + ' at 7:00pm';
+      const opt = document.createElement('option');
+      opt.value = label;
+      opt.textContent = label;
+      dateSelect.appendChild(opt);
+      added++;
+    }
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     statusEl.className = 'form-status';
 
     if (!form.checkValidity()) {
-      statusEl.textContent = 'Please add your name, email, and a message.';
+      statusEl.textContent = 'Please fill in your name, email, phone, and pick a training date.';
       statusEl.classList.add('err');
       return;
     }
