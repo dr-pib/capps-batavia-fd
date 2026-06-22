@@ -3,16 +3,17 @@
 _What this is: Express-served website for the Capps-Batavia Volunteer Fire Department (Boone County, AR), with a password-protected alerts admin and a service-area map fed by ArcGIS boundary data. Deployed on Railway._
 
 ## In progress
-- Site redesigned (dark-ish, nature-forward, serif headings, department-red accent). Awaiting real hero photos from the user.
+- Site redesign complete. Hero uses real CBFD photos (weighted rotation + manual arrows). Join page content is largely filled in.
 
 ## Next up
-- **Onboarding process (user reminder):** spell out the application/onboarding steps on the Join page — what happens after someone attends a training meeting and applies (training year, gear, expectations, etc.). User will provide details.
-- **Join page message form:** BUILT (Name/Email/Phone/Message, AJAX to Formspree). Waiting on the user's Formspree form ID to drop into `FORMSPREE_ID` in join.html — until then it shows an "email us" fallback. Recipient should be cbfd5003@gmail.com.
-- NO EM DASHES anywhere in copy (user preference) — keep using periods/commas/middots.
-- Hero photos: user will supply a "dominant" landscape photo (the Ozarks) + others. Drop files in `public/images/` and list them in the `HERO_IMAGES` array in `index.html` (rotation pool = random per visit; `from`/`to` = one-off dates; `season` = recurring). Currently using Unsplash placeholders.
-- Replace content placeholders across pages: about (mission, history, bylaws PDF, roster), join (requirements, application process), donate (donation methods + mailing address), contact (Facebook URL, station address, meeting schedule).
-- Verify Capps & Batavia fire-station coordinates (still from OSM); Ridgeway is confirmed (10470 Gass Ct).
-- Decide on real `ADMIN_PASSWORD` via Railway env var instead of relying on the `cbfd-admin` default in server.js.
+- Remaining content placeholders: About (history, bylaws PDF, roster/officers), Contact (Facebook URL, station address, meeting schedule), Donate (online methods like PayPal/Venmo if wanted; mailing address is done).
+- Verify Capps & Batavia fire-station map coordinates (still from OSM); Ridgeway is confirmed (10470 Gass Ct).
+- Decide on a real `ADMIN_PASSWORD` via Railway env var instead of the `cbfd-admin` default in server.js.
+
+## Standing notes
+- NO EM DASHES anywhere in site copy (user preference). Use periods, commas, or middots.
+- Hero images: drop files in `public/images/`, list in `HERO_IMAGES` in index.html. `weight` = frequency, `fit:'contain'` = blurred-fill for small photos, `season`/`from`/`to` = scheduling.
+- Join form is live via Formspree (id `mbdvjrog`), emails to cbfd5003@gmail.com. Onboarding "What to Expect" steps are done.
 
 ## Backlog
 - Confirm `DATA_DIR` points at a Railway volume so `alerts.json` survives redeploys (currently defaults to repo dir — alerts would be lost on each deploy).
