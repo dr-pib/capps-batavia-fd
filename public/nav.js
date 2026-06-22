@@ -6,7 +6,7 @@
     { href: '/',                  label: 'Home' },
     { href: '/about.html',        label: 'About' },
     { href: '/service-area.html', label: 'Service Area' },
-    { href: '/alerts.html',       label: 'Alerts', cls: 'alerts' },
+    { href: '/alerts.html',       label: 'Community Alerts', cls: 'alerts' },
     { href: '/join.html',         label: 'Join Us' },
     { href: '/donate.html',       label: 'Donate' },
     { href: '/contact.html',      label: 'Contact' },
