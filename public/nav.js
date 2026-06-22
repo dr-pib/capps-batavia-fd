@@ -67,7 +67,7 @@
   if (banner) {
     fetch('/api/alerts').then(r => r.json()).then(alerts => {
       if (!alerts.length) return;
-      banner.innerHTML = `<div class="alert-banner-inner"><span>${alerts[0].title}</span> &mdash; <a href="/alerts.html">View all alerts</a></div>`;
+      banner.innerHTML = `<div class="alert-banner-inner"><span>${alerts[0].title}</span> · <a href="/alerts.html">View all alerts</a></div>`;
       banner.classList.add('visible');
     }).catch(() => {});
   }

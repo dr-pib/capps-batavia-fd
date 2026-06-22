@@ -6,6 +6,9 @@ _What this is: Express-served website for the Capps-Batavia Volunteer Fire Depar
 - Site redesigned (dark-ish, nature-forward, serif headings, department-red accent). Awaiting real hero photos from the user.
 
 ## Next up
+- **Onboarding process (user reminder):** spell out the application/onboarding steps on the Join page — what happens after someone attends a training meeting and applies (training year, gear, expectations, etc.). User will provide details.
+- **Join page message form:** the "How to Apply" copy was softened from "the form below" to "the options below" (Email/Contact buttons) because no message form exists yet. Decide whether to build a real form and how submissions should be delivered (visitor's email via mailto, a form service, or stored in the admin panel).
+- NO EM DASHES anywhere in copy (user preference) — keep using periods/commas/middots.
 - Hero photos: user will supply a "dominant" landscape photo (the Ozarks) + others. Drop files in `public/images/` and list them in the `HERO_IMAGES` array in `index.html` (rotation pool = random per visit; `from`/`to` = one-off dates; `season` = recurring). Currently using Unsplash placeholders.
 - Replace content placeholders across pages: about (mission, history, bylaws PDF, roster), join (requirements, application process), donate (donation methods + mailing address), contact (Facebook URL, station address, meeting schedule).
 - Verify Capps & Batavia fire-station coordinates (still from OSM); Ridgeway is confirmed (10470 Gass Ct).

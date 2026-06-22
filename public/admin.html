@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — Capps-Batavia Fire Department</title>
+  <title>Admin · Capps-Batavia Fire Department</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -107,7 +107,7 @@ async function loadAdminAlerts() {
     <div class="admin-alert-row" id="row-${a.id}">
       <div class="info">
         <strong>${escHtml(a.title)}</strong>
-        <span>${TYPE_LABELS[a.type] ?? a.type} &mdash; ${formatDate(a.postedAt)}</span>
+        <span>${TYPE_LABELS[a.type] ?? a.type} · ${formatDate(a.postedAt)}</span>
         <div style="margin-top:4px;font-size:0.82rem;color:#374151">${escHtml(a.message)}</div>
       </div>
       <button class="btn btn-danger btn-sm" onclick="deleteAlert('${a.id}')">Remove</button>

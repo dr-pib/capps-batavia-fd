@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Service Area — Capps-Batavia Fire Department</title>
+  <title>Service Area · Capps-Batavia Fire Department</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css" />
   <style>
@@ -54,7 +54,7 @@
 </div>
 
 <div class="map-legend">
-  <span style="color:#f97316;font-weight:700;">—</span>
+  <span style="display:inline-block;width:24px;border-top:3px dashed #f97316;vertical-align:middle;"></span>
   <span>District Boundary</span>
   <span style="margin-left:16px;color:#9ca3af">Capps-Batavia Fire District, Boone County, Arkansas</span>
   <span id="map-stats" style="margin-left:auto;color:#9ca3af"></span>
@@ -106,7 +106,7 @@ async function initMap() {
 
   // Fit to the district and "crop" the view (lock panning + stop zoom-out at
   // the fitted view). The map lives in a flex container, so we (re)apply this
-  // whenever it gets a real size — a ResizeObserver avoids the race where an
+  // whenever it gets a real size - a ResizeObserver avoids the race where an
   // early fit on a zero-sized container would lock in a bad zoom.
   const bounds = layer.getBounds();
   const applyView = () => {
@@ -143,7 +143,7 @@ async function initMap() {
     });
   });
 
-  // Fire stations — marked with a fire-engine icon; name shows on hover.
+  // Fire stations - marked with a fire-engine icon; name shows on hover.
   const stations = [
     { name: 'Capps Fire Station',    lat: 36.23732, lng: -93.18700 },
     { name: 'Batavia Fire Station',  lat: 36.25998, lng: -93.22967 },
