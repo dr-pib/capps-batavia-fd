@@ -6,9 +6,7 @@ _What this is: Express-served website for the Capps-Batavia Volunteer Fire Depar
 - Site redesign complete. Hero uses real CBFD photos (weighted rotation + manual arrows). Join page content is largely filled in.
 
 ## Next up
-- Remaining content placeholders: About (history, bylaws PDF, roster/officers), Contact (Facebook URL, station address, meeting schedule), Donate (online methods like PayPal/Venmo if wanted; mailing address is done).
-- Verify Capps & Batavia fire-station map coordinates (still from OSM); Ridgeway is confirmed (10470 Gass Ct).
-- Decide on a real `ADMIN_PASSWORD` via Railway env var instead of the `cbfd-admin` default in server.js.
+Active task tracking lives in the user's **Project HQ**, not this file. Snapshot of open items at last update: About history/bylaws/roster, Contact Facebook/address/meeting schedule, optional Donate online methods, verify Capps & Batavia station map pins, set a real `ADMIN_PASSWORD`.
 
 ## Standing notes
 - NO EM DASHES anywhere in site copy (user preference). Use periods, commas, or middots.
