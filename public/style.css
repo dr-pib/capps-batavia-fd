@@ -196,6 +196,11 @@ section a.inline:hover { text-decoration: underline; }
 .no-alerts { text-align: center; padding: 60px 20px; color: #9ca3af; }
 .no-alerts p { font-size: 1rem; }
 
+/* ── Task list (Join page "What We Do") ── */
+.task-list { columns: 2; column-gap: 36px; margin: 0 0 16px; padding-left: 20px; line-height: 1.75; color: var(--ink-soft); }
+.task-list li { break-inside: avoid; margin-bottom: 4px; padding-left: 2px; }
+@media (max-width: 620px) { .task-list { columns: 1; } }
+
 /* ── Message form (Join page) ── */
 .message-form { background: var(--paper-2); border: 1px solid var(--edge); border-radius: 6px; padding: 24px; max-width: 540px; margin-top: 18px; }
 .message-form .btn { margin-top: 4px; }
