@@ -21,16 +21,6 @@ body { font-family: var(--sans); color: var(--ink); background: var(--paper); li
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 
-/* ── Emergency utility bar ── */
-.util-bar { background: var(--dark); color: #c9ced8; font-size: 0.78rem; letter-spacing: 0.04em; }
-.util-inner {
-  max-width: var(--wrap); margin: 0 auto; padding: 7px 24px;
-  display: flex; justify-content: space-between; align-items: center; gap: 16px;
-}
-.util-bar .brand-mini { text-transform: uppercase; letter-spacing: 0.14em; font-weight: 600; color: #e9ecf1; }
-.util-bar .emergency { text-transform: uppercase; letter-spacing: 0.1em; }
-.util-bar .emergency strong { color: #ff6b52; font-weight: 700; letter-spacing: 0.06em; }
-
 /* ── Masthead ── */
 .masthead { background: var(--dark); border-bottom: 3px solid var(--red); position: relative; }
 .masthead-inner {
@@ -278,7 +268,6 @@ footer.site-footer { background: var(--dark); color: #8a93a1; border-top: 3px so
   nav.primary.open { display: flex; }
   nav.primary a { padding: 12px 8px; border-bottom: 1px solid #232a35; margin-bottom: 0; text-align: center; }
   nav.primary a.active { border-bottom-color: var(--red); }
-  .util-inner { flex-direction: column; gap: 4px; text-align: center; }
   .links-grid { grid-template-columns: 1fr; }
   .link-card, .link-card:first-child { border-left: 1px solid var(--edge); border-right: 1px solid var(--edge); }
   .content-wrap { padding: 40px 20px; }
