@@ -25,12 +25,6 @@
   const header = document.getElementById('site-header');
   if (header) {
     header.innerHTML = `
-      <div class="util-bar">
-        <div class="util-inner">
-          <span class="brand-mini">Capps-Batavia Fire Department</span>
-          <span class="emergency">Emergencies: Dial <strong>9-1-1</strong></span>
-        </div>
-      </div>
       <div class="masthead">
         <div class="masthead-inner">
           <button class="menu-toggle" id="menu-toggle" aria-label="Menu">&#9776;</button>
@@ -38,7 +32,7 @@
             <span class="emblem" aria-hidden="true"></span>
             <div class="wordmark">
               <div class="name">Capps-Batavia Fire Department</div>
-              <div class="sub">Serving our community through volunteer fire &amp; EMS</div>
+              <div class="sub">Since 1977</div>
             </div>
           </div>
           <nav class="primary" id="main-nav">${navHtml}</nav>

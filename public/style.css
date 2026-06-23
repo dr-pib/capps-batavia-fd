@@ -197,7 +197,7 @@ section a.inline:hover { text-decoration: underline; }
 .no-alerts p { font-size: 1rem; }
 
 /* ── Numbered steps (Join "What to Expect") ── */
-.steps { padding-left: 24px; line-height: 1.6; color: var(--ink-soft); margin-bottom: 8px; }
+.steps { padding-left: 24px; font-size: 1.0625rem; line-height: 1.7; color: var(--ink); margin-bottom: 8px; }
 .steps li { margin-bottom: 9px; padding-left: 4px; }
 .steps li::marker { color: var(--red); font-weight: 700; }
 
