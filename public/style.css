@@ -137,9 +137,9 @@ section { margin-bottom: 48px; }
 section:last-child { margin-bottom: 0; }
 section h2 { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--ink); margin-bottom: 14px; }
 section h2 .accent, section h2::after { }
-section p { line-height: 1.75; color: var(--ink-soft); margin-bottom: 14px; }
+section p { font-size: 1.0625rem; line-height: 1.75; color: var(--ink); margin-bottom: 14px; }
 section p:last-child { margin-bottom: 0; }
-section ul { padding-left: 20px; line-height: 1.9; color: var(--ink-soft); margin-bottom: 14px; }
+section ul { padding-left: 20px; font-size: 1.0625rem; line-height: 1.9; color: var(--ink); margin-bottom: 14px; }
 section a.inline { color: var(--red); font-weight: 600; }
 section a.inline:hover { text-decoration: underline; }
 
