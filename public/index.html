@@ -137,10 +137,9 @@
         blur.style.backgroundImage = `url('${item.src}')`;
         photo.style.backgroundImage = `url('${item.src}')`;
         photo.style.backgroundSize = contain ? 'contain' : 'cover';
-        // For small photos, the blur mirrors the photo's framing (contain) but
-        // enlarged, so its edges continue the photo instead of showing a crop.
-        blur.style.backgroundSize = contain ? 'contain' : 'cover';
-        blur.style.transform = contain ? 'scale(1.9)' : 'scale(1.2)';
+        // The blurred backdrop always covers the full hero (see .hero-blur in
+        // style.css), so a small letterboxed photo sits over a clean blurred fill
+        // of the same scene instead of muddy enlarged bars.
       };
       pre.src = item.src;
     }
